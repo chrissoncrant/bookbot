@@ -1,7 +1,9 @@
 test_obj = {
     "string_1": "'Shall', 'ascend', 'my', 'funeral', 'pile', 'triumphantly', 'and', 'exult', 'in', 'tHe', 'agony', 'of', 'the', 'torturing', 'flames.', 'The', 'light'",
 
-    "list_1": ['shall', 'ascend', 'my', 'funeral', 'pile', 'triumphantly', 'and', 'exult', 'in', 'the', 'agony', 'of', 'the', 'torturing', 'flames.', 'The', 'light']
+    "list_1": ['shall', 'ascend', 'my', 'funeral', 'pile', 'triumphantly', 'and', 'exult', 'in', 'the', 'agony', 'of', 'the', 'torturing', 'flames.', 'The', 'light'],
+
+    "obj_1": {"a": 5, "h": 6}
 }
 
 def get_book_text(path):
@@ -41,16 +43,29 @@ def sort_on(dict):
     key = [key for key in dict][0]
     return dict[key]
 
+def sort_list(dict, rev):
+    list = dict_to_list(dict)
+    list.sort(key=sort_on, reverse=rev)
+    return list
+
 def print_report(word_count, character_list, sort=True):  
+    
     if sort:
-        character_list.sort(key=sort_on, reverse=True)
+        sorted = sort_list(character_list, sort)
+        character_list = sorted
     header = f"\n---Begin report of book---\n\n{word_count} words found in the document\n\n"
     footer = "---End report---"
     body = ""
     for char in character_list:
-        key = [key for key in char][0]
-        count = char[key]
-        new_line = f"The '{key} character was found {count} time\n"
+        if type(char) == dict:
+            key = [key for key in char][0]
+            count = char[key]
+        else:
+            key = char
+            count = character_list[char]
+        if key == "\n":
+            key = "new line"
+        new_line = f"The '{key}' character was found {count} time\n"
         body += new_line
     return f"{header}{body}\n{footer}\n"
 
@@ -63,7 +78,9 @@ def main():
 
     character_dictionary = count_characters(text)
 
-    print(character_dictionary)
+    report = print_report(words, character_dictionary, True)
+
+    print(report)
 
 main()
 
@@ -76,3 +93,19 @@ main()
 # c.sort(key=sort_on, reverse=True)
 # # print(c)
 # print(print_report(45, c))
+
+# def test(obj):
+#     print(obj)
+#     for char in obj:
+#         if type(char) == dict:
+#             key = [key for key in char][0]
+#             print("Key: ", key)
+#             count = char[key]
+#         else:
+#             key = char
+#             print("Key: ", key)
+#             count = obj[char]
+#         print(count)
+        
+# test(test_obj['obj_1'])
+# test(c)
